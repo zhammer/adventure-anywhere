@@ -10,3 +10,4 @@ dist/
 sms_adventure_file_saves
 .mypy_cache/
 .vscode
+.serverless

@@ -1,0 +1,50 @@
+service: sms-adventure
+
+provider:
+  name: aws
+  runtime: python3.7
+  environment:
+    SAVES_S3_BUCKET: ${self:custom.savesBucketName}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:ListBucket
+      Resource:
+        - "arn:aws:s3:::${self:custom.savesBucketName}/*"
+        - "arn:aws:s3:::${self:custom.savesBucketName}"
+
+package:
+  exclude:
+    - "**"
+  include:
+    - adventure/**
+    - sms_adventure/**
+
+functions:
+  sms-adventure:
+    handler: sms_adventure.handler.handle_sms
+    events:
+      - http:
+          path: /sms
+          method: post
+          integration: lambda
+          response:
+            headers:
+              Content-Type: "'application/xml'"
+            template: $input.path('$')
+
+resources:
+  Resources:
+    SavesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.savesBucketName}
+
+custom:
+  savesBucketName: sms-adventure-saves-bucket
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
