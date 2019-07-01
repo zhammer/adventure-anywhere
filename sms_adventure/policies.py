@@ -18,6 +18,25 @@ class command:
         return None
 
     @staticmethod
+    def _prohibited_adventure_commands(command_text: str) -> Optional[str]:
+        """
+        >>> command._prohibited_adventure_commands("quit")
+        '"QUIT" CANNOT BE USED IN SMS ADVENTURE.'
+        >>> command._prohibited_adventure_commands(" quit")
+        '"QUIT" CANNOT BE USED IN SMS ADVENTURE.'
+        >>> command._prohibited_adventure_commands("quit game")
+        '"QUIT" CANNOT BE USED IN SMS ADVENTURE.'
+        >>> command._prohibited_adventure_commands("take lamp") is None
+        True
+        """
+        prohibited_adventure_commands = ["quit", "save", "score", "suspend", "pause"]
+        for prohibited_adventure_command in prohibited_adventure_commands:
+            if command_text.lstrip().startswith(prohibited_adventure_command):
+                return f'"{prohibited_adventure_command.upper()}" CANNOT BE USED IN SMS ADVENTURE.'
+
+        return None
+
+    @staticmethod
     def _includes_words_policy(command_text: str) -> Optional[str]:
         if not re.findall(r"\w+", command_text):
             return "COMMAND MUST CONTAIN AT LEAST ONE WORD."
@@ -25,4 +44,8 @@ class command:
 
     @staticmethod
     def _policies() -> Iterable[Callable[[str], Optional[str]]]:
-        return (command._one_line_policy, command._includes_words_policy)
+        return (
+            command._one_line_policy,
+            command._includes_words_policy,
+            command._prohibited_adventure_commands,
+        )
