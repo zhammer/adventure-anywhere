@@ -1,3 +1,4 @@
+import re
 import textwrap
 
 
@@ -35,8 +36,10 @@ def strip_sms_bypass_prefix(command_text: str) -> str:
     'help'
     >>> strip_sms_bypass_prefix("take lamp")
     'take lamp'
+    >>> strip_sms_bypass_prefix("east")
+    'east'
     """
-    return command_text.lstrip("game ")
+    return re.sub(r"^game ", "", command_text)
 
 
 def is_restart_command(command_text: str) -> bool:
