@@ -1,19 +1,22 @@
 import abc
 import io
-from typing import NamedTuple, Optional
+from typing import Callable, NamedTuple, NewType, Optional
+
+
+Notice = NewType("Notice", str)
 
 
 class SavesGateway(abc.ABC):
     @abc.abstractmethod
-    def fetch_save(self, sms_number: str) -> Optional[io.BytesIO]:
+    def fetch_save(self, player_id: str) -> Optional[io.BytesIO]:
         ...
 
     @abc.abstractmethod
-    def update_save(self, sms_number: str, save: io.BytesIO) -> None:
+    def update_save(self, player_id: str, save: io.BytesIO) -> None:
         ...
 
 
-class GameGateway(abc.ABC):
+class GameEngine(abc.ABC):
     @abc.abstractmethod
     def resume(self, save: io.BytesIO) -> None:
         ...
@@ -31,6 +34,11 @@ class GameGateway(abc.ABC):
         ...
 
 
+class Config(NamedTuple):
+    preprocess_command: Optional[Callable[[str], str]] = None
+    after_start_notice: Optional[Notice] = None
+
+
 class Context(NamedTuple):
-    game: GameGateway
     saves: SavesGateway
+    config: Config = Config()

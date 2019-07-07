@@ -6,9 +6,9 @@ class command:
     @staticmethod
     def invalid_reason(command_text: str) -> Optional[str]:
         for policy in command._policies():
-            out = policy(command_text)
-            if out:
-                return out
+            violation = policy(command_text)
+            if violation:
+                return violation
         return None
 
     @staticmethod

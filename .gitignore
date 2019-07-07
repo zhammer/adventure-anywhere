@@ -7,7 +7,7 @@ __pycache__/
 build/
 dist/
 *.egg-info
-sms_adventure_file_saves
+adventure_anywhere_file_saves
 .mypy_cache/
 .vscode
 .serverless

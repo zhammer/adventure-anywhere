@@ -20,6 +20,7 @@ package:
     - "**"
   include:
     - adventure/**
+    - adventure_anywhere/**
     - sms_adventure/**
 
 functions:

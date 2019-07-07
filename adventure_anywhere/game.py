@@ -5,10 +5,10 @@ from typing import Optional
 import adventure
 from adventure.game import Game
 
-from sms_adventure.definitions import GameGateway as GameGatewayABC
+from adventure_anywhere.definitions import GameEngine as GameEngineABC
 
 
-class GameGateway(GameGatewayABC):
+class GameEngine(GameEngineABC):
     game: Optional[Game]
 
     def __init__(self) -> None:
