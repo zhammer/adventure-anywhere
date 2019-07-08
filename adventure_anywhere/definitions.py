@@ -33,6 +33,10 @@ class GameEngine(abc.ABC):
     def save(self) -> io.BytesIO:
         ...
 
+    @abc.abstractmethod
+    def last_output(self) -> str:
+        ...
+
 
 class Config(NamedTuple):
     preprocess_command: Optional[Callable[[str], str]] = None

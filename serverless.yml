@@ -22,6 +22,7 @@ package:
     - adventure/**
     - adventure_anywhere/**
     - sms_adventure/**
+    - alexa_adventure/**
 
 functions:
   sms-adventure:
@@ -35,6 +36,10 @@ functions:
             headers:
               Content-Type: "'application/xml'"
             template: $input.path('$')
+  alexa-adventure:
+    handler: alexa_adventure.handler.handle
+    events:
+      - alexaSkill: amzn1.ask.skill.3c273e3b-01f5-4541-b693-6cebc165908e
 
 resources:
   Resources:
