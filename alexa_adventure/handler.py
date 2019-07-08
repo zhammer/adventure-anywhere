@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Any, Dict, Optional, cast
 
 from adventure_anywhere.definitions import Config, Context
@@ -12,13 +13,15 @@ session_close_prompt = (
     "SAVING PROGRESS IN ADVENTURE. RESUME GAME BY SAYING 'ALEXA, OPEN CAVE ADVENTURE.'"
 )
 
+
 skill = Skill()
 handle = skill.handle
 
 
 @skill.intent("AMAZON.HelpIntent")
 def _handle_help_request(event: Dict, context: Any) -> Dict:
-    return _build_response(GameEngine.help_prompt(), should_session_end=False)
+    out = _replace_type_with_say(GameEngine.help_prompt())
+    return _build_response(out, should_session_end=False)
 
 
 @skill.intent("AMAZON.CancelIntent")
@@ -71,7 +74,7 @@ def _handle_command_intent_request(event: Dict, context: Any) -> Dict:
     except CommandPolicyViolationError as e:
         out = str(e)
 
-    return _build_response(out, should_session_end=False)
+    return _build_response(_replace_type_with_say(out), should_session_end=False)
 
 
 def _build_response(response_text: str, *, should_session_end: bool) -> Dict:
@@ -91,3 +94,21 @@ def _pluck_command(event: Dict) -> str:
     command_b: Optional[str] = slots.get("commandB", {}).get("value", None)
 
     return f"{command_a} {command_b}" if command_b else command_a
+
+
+def _replace_type_with_say(text: str) -> str:
+    """
+    >>> _replace_type_with_say("TYPED")
+    'TYPED'
+
+    >>> _replace_type_with_say("TYPE")
+    'SAY'
+
+    >>> _replace_type_with_say("TYPE W RATHER THAN WEST")
+    'SAY W RATHER THAN WEST'
+
+    >>> _replace_type_with_say('WELCOME TO ADVENTURE!! WOULD YOU LIKE INSTRUCTIONS? - - - (TYPE "RESTART" TO RESTART THE GAME.)')  #doctest: +ELLIPSIS
+    'WELCOME...SAY "RESTART"...'
+    """
+    return re.sub(r"\bTYPE\b", "SAY", text, flags=re.IGNORECASE)
+
