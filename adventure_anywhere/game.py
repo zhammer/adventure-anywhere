@@ -50,6 +50,12 @@ class GameEngine(GameEngineABC):
 
         return self.game.output
 
+    @staticmethod
+    def help_prompt() -> str:
+        game = Game()
+        adventure.load_advent_dat(game)
+        return str(game.messages[51])
+
 
 class GameNotStartedError(Exception):
     message = "Game has not been started"
