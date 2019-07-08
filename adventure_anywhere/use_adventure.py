@@ -5,6 +5,10 @@ from adventure_anywhere.game import GameEngine
 
 
 def do_command(context: Context, command_text: str, player_id: str) -> str:
+    """
+    If a game hasn't been started, starts a game and returns the start output.
+    Otherwise, resumes the game where it last left off and does the provided command.
+    """
     game_engine = GameEngine()
     command_text = special_sms_functionality.preprocess_command(
         command_text, context.config
@@ -30,3 +34,24 @@ def do_command(context: Context, command_text: str, player_id: str) -> str:
     context.saves.update_save(player_id, new_save)
 
     return response_text
+
+
+def last_output(context: Context, player_id: str) -> str:
+    """
+    If a game hasn't been started, starts a game and returns the start output.
+    Otherwise, returns the last output from the game.
+    """
+    game_engine = GameEngine()
+
+    last_save = context.saves.fetch_save(player_id)
+    if not last_save:
+        start_text = game_engine.start()
+        response_text = special_sms_functionality.add_after_start_notices(
+            start_text, context.config
+        )
+    else:
+        game_engine.resume(last_save)
+        response_text = game_engine.last_output()
+
+    return response_text
+

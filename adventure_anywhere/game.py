@@ -44,6 +44,12 @@ class GameEngine(GameEngineABC):
         self.game.t_suspend(verb=None, obj=save_data_stream)
         return save_data_stream
 
+    def last_output(self) -> str:
+        if not self.game:
+            raise GameNotStartedError
+
+        return self.game.output
+
 
 class GameNotStartedError(Exception):
     message = "Game has not been started"
