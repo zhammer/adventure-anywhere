@@ -1,8 +1,14 @@
 import io
-from typing import List
+from typing import Dict, List
+
+from typing_extensions import Protocol
+
+class SupportsString(Protocol):
+    def __str__(self) -> str: ...
 
 class Game:
     output: str
+    messages: Dict[int, SupportsString]
     def do_command(self, words: List[str]) -> str: ...
     def t_suspend(self, verb: None, obj: io.BytesIO) -> None: ...
     def start(self) -> None: ...
