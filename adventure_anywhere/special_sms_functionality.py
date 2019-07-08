@@ -7,7 +7,7 @@ from adventure_anywhere.utils import notice, pipe, with_delimiter, without_none_
 
 line_delimiter = "                             - - -"
 
-restart_notice = notice('(TYPE "RESTART" TO RESTART THE GAME.)')
+restart_notice = notice('(TYPE "RESTART" AT ANY POINT TO RESTART THE GAME.)')
 
 
 def add_after_start_notices(start_text: str, config: Config) -> str:
