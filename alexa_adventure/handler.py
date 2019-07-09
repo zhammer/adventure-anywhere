@@ -53,7 +53,7 @@ def _handle_launch_request(event: Dict, context: Any) -> Dict:
     s3_bucket_saves = S3BucketSavesGateway(bucket_name)
     context = Context(saves=s3_bucket_saves)
 
-    out = last_output(context, player_id=user_id)
+    out = _replace_type_with_say(last_output(context, player_id=user_id))
 
     return _build_response(out, should_session_end=False)
 
