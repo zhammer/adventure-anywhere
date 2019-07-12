@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "adventure",
+      "invocationName": "cave adventure",
       "intents": [
         {
           "name": "AMAZON.FallbackIntent",
